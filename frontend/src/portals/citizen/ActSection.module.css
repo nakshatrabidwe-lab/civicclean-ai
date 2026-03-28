@@ -1,0 +1,86 @@
+/* ── Wrapper ──────────────────────────────────────────────── */
+.wrap { display: flex; flex-direction: column; gap: 24px; }
+
+/* ── Sub-nav tabs ─────────────────────────────────────────── */
+.subNav {
+  display: flex; gap: 10px; flex-wrap: wrap;
+}
+
+.subTab {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all 0.18s;
+  flex: 1; min-width: 180px;
+}
+.subTab:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+.subTabActive {
+  border-color: var(--tab-color, var(--color-primary)) !important;
+  background: color-mix(in srgb, var(--tab-color, var(--color-primary)) 8%, white) !important;
+}
+
+.subTabEmoji { font-size: 1.4rem; flex-shrink: 0; }
+
+.subTabText  { display: flex; flex-direction: column; gap: 1px; }
+.subTabLabel {
+  font-family: var(--font-display); font-size: 0.9rem; font-weight: 700;
+  color: var(--color-text);
+}
+.subTabActive .subTabLabel { color: var(--tab-color, var(--color-primary)); }
+.subTabDesc  { font-size: 0.75rem; color: var(--color-text-muted); }
+
+/* ── Landing ──────────────────────────────────────────────── */
+.landing { display: flex; flex-direction: column; gap: 24px; }
+
+.landingHero { text-align: center; padding: 16px 0 8px; }
+.landingHero h1 {
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  color: var(--color-text); margin-bottom: 10px;
+}
+.landingHero p { font-size: 1rem; color: var(--color-text-muted); max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+.landingCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.landingCard {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  padding: 28px 24px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  cursor: pointer; text-align: left;
+  transition: all 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+.landingCard:hover {
+  border-color: var(--card-color, var(--color-primary));
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.landingEmoji { font-size: 2.2rem; }
+.landingCard h2 {
+  font-size: 1.2rem; font-weight: 800;
+  color: var(--color-text); margin: 0;
+}
+.landingCard p {
+  font-size: 0.88rem; color: var(--color-text-muted);
+  line-height: 1.5; margin: 0;
+}
+.landingArrow {
+  margin-top: 8px;
+  font-size: 0.85rem; font-weight: 700;
+  color: var(--card-color, var(--color-primary));
+}

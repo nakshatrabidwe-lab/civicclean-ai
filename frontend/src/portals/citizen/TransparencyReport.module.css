@@ -1,0 +1,196 @@
+/* ═══════════════════════════════════════════════════════════
+   Public Transparency Report – clean government data portal
+═══════════════════════════════════════════════════════════ */
+@keyframes fadeUp { from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)} }
+@keyframes countUp{ from{opacity:0}to{opacity:1} }
+
+.page { display:flex; flex-direction:column; gap:22px; animation:fadeUp .35s ease; }
+
+/* ── Hero banner ─────────────────────────────────────────── */
+.hero {
+  background:linear-gradient(135deg,#0f3324 0%,#0f4726 50%,#1a6b3c 100%);
+  border-radius:var(--radius-xl); padding:28px 32px;
+  display:flex; align-items:flex-start; justify-content:space-between;
+  flex-wrap:wrap; gap:20px;
+  position:relative; overflow:hidden;
+  box-shadow:0 8px 32px rgba(26,107,60,.25);
+}
+.hero::after {
+  content:''; position:absolute; top:-60px; right:-60px;
+  width:240px; height:240px; border-radius:50%;
+  background:rgba(240,165,0,.06); pointer-events:none;
+}
+
+.heroLeft { display:flex; align-items:flex-start; gap:16px; flex:1; }
+.govSeal  { font-size:2.4rem; flex-shrink:0; }
+.govTag   { font-size:.72rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:6px; }
+.heroTitle{ font-size:clamp(1.3rem,3vw,1.8rem); font-weight:800; letter-spacing:-.02em; color:#fff; }
+.heroSub  { font-size:.85rem; color:rgba(255,255,255,.6); margin-top:4px; line-height:1.5; }
+
+/* City selector */
+.citySelector { display:flex; flex-direction:column; gap:8px; }
+.cityLabel    { font-size:.72rem; font-weight:700; color:rgba(255,255,255,.5); letter-spacing:.06em; text-transform:uppercase; }
+.cityPills    { display:flex; gap:6px; flex-wrap:wrap; }
+.cityPill {
+  padding:8px 18px; border-radius:var(--radius-full);
+  border:1.5px solid rgba(255,255,255,.2); background:rgba(255,255,255,.06);
+  color:rgba(255,255,255,.7); font-size:.85rem; font-weight:600;
+  cursor:pointer; transition:all .15s; white-space:nowrap;
+}
+.cityPill:hover    { background:rgba(255,255,255,.12); color:#fff; }
+.cityPillActive    { background:var(--color-accent) !important; border-color:var(--color-accent) !important; color:#1a1a1a !important; font-weight:800; }
+.lastUpdated { font-size:.72rem; color:rgba(255,255,255,.35); }
+
+/* ── Big stat cards ──────────────────────────────────────── */
+.bigStats {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:14px;
+}
+.bigCard {
+  border-radius:var(--radius-xl); padding:24px 26px;
+  display:flex; align-items:center; gap:18px;
+  position:relative; overflow:hidden;
+  box-shadow:0 6px 24px rgba(0,0,0,.14);
+}
+.bigCardGarbage { background:linear-gradient(135deg,#431407,#9a3412); }
+.bigCardTrees   { background:linear-gradient(135deg,#0f3324,#166534); }
+
+.bigCardIcon {
+  font-size:2.8rem; flex-shrink:0;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,.3));
+}
+.bigCardContent { flex:1; }
+.bigCardLabel { font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:rgba(255,255,255,.55); margin-bottom:6px; }
+.bigCardValue { font-family:var(--font-display); font-size:clamp(1.6rem,4vw,2.2rem); font-weight:800; color:#fff; letter-spacing:-.03em; line-height:1; }
+.bigCardSub   { font-size:.75rem; color:rgba(255,255,255,.5); margin-top:6px; }
+.bigCardWave  { position:absolute; right:16px; bottom:6px; font-size:3rem; opacity:.12; pointer-events:none; }
+
+/* ── Generic card ────────────────────────────────────────── */
+.card {
+  background:var(--color-surface); border:1.5px solid var(--color-border);
+  border-radius:var(--radius-xl); padding:22px 24px;
+  display:flex; flex-direction:column; gap:18px;
+  box-shadow:var(--shadow-sm);
+}
+.cardTitle { font-family:var(--font-display); font-size:1rem; font-weight:700; color:var(--color-text); }
+
+/* ── Environmental health ────────────────────────────────── */
+.envRow { display:flex; align-items:center; gap:32px; flex-wrap:wrap; }
+.envBlock { flex:1; min-width:220px; display:flex; flex-direction:column; gap:10px; }
+.envLabel { font-size:.82rem; font-weight:600; color:var(--color-text-muted); }
+
+.aqiDisplay { display:flex; align-items:center; gap:10px; }
+.aqiNumber  { font-family:var(--font-display); font-size:2rem; font-weight:800; line-height:1; }
+.aqiLabel   { font-size:.75rem; font-weight:700; padding:4px 10px; border-radius:var(--radius-full); }
+
+.aqiBar { position:relative; height:8px; border-radius:var(--radius-full); overflow:visible; display:flex; margin-top:4px; }
+.aqiBand { height:100%; }
+.aqiBand:first-child { border-radius:4px 0 0 4px; }
+.aqiBand:last-child  { border-radius:0 4px 4px 0; }
+.aqiMarker {
+  position:absolute; top:50%; transform:translate(-50%,-50%);
+  width:14px; height:14px; border-radius:50%;
+  background:#fff; border:2.5px solid #1a1f16;
+  box-shadow:0 2px 6px rgba(0,0,0,.3);
+  transition:left 1.4s cubic-bezier(.4,0,.2,1);
+}
+
+.aqiBandLabels {
+  display:flex; justify-content:space-between;
+  font-size:.62rem; color:var(--color-text-subtle);
+}
+
+.envDivider { width:1.5px; height:100px; background:var(--color-border); flex-shrink:0; }
+
+.ringRow { display:flex; gap:24px; flex-wrap:wrap; align-items:center; }
+
+/* Ring */
+.ringWrap { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.ringCenter {
+  position:absolute;
+  display:flex; align-items:baseline; gap:1px;
+}
+.ringPct   { font-family:var(--font-display); font-size:1rem; font-weight:800; line-height:1; }
+.ringUnit  { font-size:.6rem; font-weight:700; color:var(--color-text-muted); }
+.ringLabel { font-size:.72rem; font-weight:600; color:var(--color-text-muted); text-align:center; }
+/* Position ring center inside svg */
+.ringWrap { position:relative; }
+.ringWrap svg { display:block; }
+.ringCenter { inset:0 0 22px 0; justify-content:center; pointer-events:none; }
+
+/* ── Tabs ────────────────────────────────────────────────── */
+.tabs {
+  display:flex; gap:6px;
+  background:var(--color-surface); border:1.5px solid var(--color-border);
+  border-radius:var(--radius-xl); padding:5px; width:fit-content;
+}
+.tab {
+  padding:9px 18px; border-radius:var(--radius-lg); border:none; background:transparent;
+  font-size:.85rem; font-weight:600; color:var(--color-text-muted); cursor:pointer;
+  transition:all .15s;
+}
+.tab:hover { background:var(--color-surface-alt); color:var(--color-text); }
+.tabActive { background:var(--color-primary) !important; color:#fff !important; }
+
+/* ── Overview grid ───────────────────────────────────────── */
+.overviewGrid {
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px;
+}
+.overviewCard {
+  background:var(--color-surface); border:1.5px solid var(--color-border);
+  border-radius:var(--radius-xl); padding:20px 18px;
+  display:flex; flex-direction:column; align-items:center; text-align:center; gap:6px;
+  box-shadow:var(--shadow-sm); transition:transform .2s, box-shadow .2s;
+}
+.overviewCard:hover { transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.overviewIcon  { font-size:1.8rem; }
+.overviewVal   { font-family:var(--font-display); font-size:1.5rem; font-weight:800; color:var(--color-text); letter-spacing:-.02em; }
+.overviewLabel { font-size:.82rem; font-weight:700; color:var(--color-text); }
+.overviewDesc  { font-size:.72rem; color:var(--color-text-muted); }
+
+/* ── Ward table ──────────────────────────────────────────── */
+.wardTable { display:flex; flex-direction:column; gap:0; }
+.wardHead {
+  display:grid; grid-template-columns:2fr 1.2fr 1fr 0.8fr 0.8fr;
+  padding:8px 12px; background:var(--color-surface-alt);
+  border-radius:var(--radius-md); margin-bottom:6px;
+  font-size:.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--color-text-muted);
+}
+.wardRow {
+  display:grid; grid-template-columns:2fr 1.2fr 1fr 0.8fr 0.8fr;
+  padding:12px 12px; border-bottom:1px solid var(--color-border);
+  align-items:center; gap:8px; transition:background .12s;
+}
+.wardRow:hover { background:var(--color-surface-alt); border-radius:var(--radius-md); }
+.wardRow:last-child { border-bottom:none; }
+.wardName { display:flex; align-items:center; gap:8px; font-size:.85rem; font-weight:600; color:var(--color-text); }
+.wardRank { font-size:.7rem; font-weight:800; color:var(--color-text-subtle); width:18px; }
+.wardCell { display:flex; flex-direction:column; gap:4px; }
+.wardVal  { font-size:.85rem; font-weight:700; color:var(--color-text); }
+.miniBar  { height:4px; background:var(--color-surface-alt); border-radius:99px; overflow:hidden; width:100%; }
+
+.scoreChip { display:inline-block; font-size:.75rem; font-weight:800; padding:3px 9px; border-radius:var(--radius-full); }
+.scoreHigh { background:rgba(34,197,94,.12); color:#16a34a; }
+.scoreMid  { background:rgba(245,158,11,.12); color:#d97706; }
+.scoreLow  { background:rgba(239,68,68,.12);  color:#dc2626; }
+
+/* ── Trends ──────────────────────────────────────────────── */
+.trendsRow { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:14px; }
+
+.chart { width:100%; height:auto; }
+
+.trendStats {
+  display:flex; gap:20px; flex-wrap:wrap;
+  font-size:.8rem; color:var(--color-text-muted);
+  border-top:1px solid var(--color-border); padding-top:12px;
+}
+.trendStats strong { color:var(--color-text); }
+
+/* ── Footer ──────────────────────────────────────────────── */
+.footer {
+  background:var(--color-surface-alt); border:1.5px solid var(--color-border);
+  border-radius:var(--radius-lg); padding:16px 20px;
+  display:flex; flex-direction:column; gap:6px;
+  font-size:.75rem; color:var(--color-text-subtle); line-height:1.6;
+}
+.footer a { color:var(--color-primary); text-decoration:underline; }
