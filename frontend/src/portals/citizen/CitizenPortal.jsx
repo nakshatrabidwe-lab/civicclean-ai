@@ -2,7 +2,7 @@ import React, { Suspense, lazy } from 'react'
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
 import styles from './CitizenPortal.module.css'
 import TrackIssues from './TrackIssues';
-import Profile from './Profile';
+import Profile from './profile';
 
 const Dashboard          = lazy(() => import('./Dashboard'))
 const RegisterPage       = lazy(() => import('./RegisterPage'))
