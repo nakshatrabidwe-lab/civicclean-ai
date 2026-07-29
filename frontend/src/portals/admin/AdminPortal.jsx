@@ -2,27 +2,20 @@ import React, { Suspense, lazy } from 'react'
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
 import styles from './AdminPortal.module.css'
 
+// Importing actual full components
+import IssueQueue from './IssueQueue';
+import Settings from './Settings';
+
+// Lazy loading other tabs
 const Overview          = lazy(() => import('./Overview'))
 const CCTVSurveillance  = lazy(() => import('./CCTVSurveillance'))
 const RewardsManagement = lazy(() => import('./RewardsManagement'))
-
-function PlaceholderPage({ title, desc }) {
-  return (
-    <div className={styles.placeholder}>
-      <h2>{title}</h2>
-      <p>{desc}</p>
-    </div>
-  )
-}
+const Analytics         = lazy(() => import('./Analytics'))
+const TeamsDispatch     = lazy(() => import('./TeamsDispatch'))
 
 function Loading() {
   return <div style={{ padding: '40px', color: '#94a3b8' }}>Loading...</div>
 }
-
-const IssueQueue = () => <PlaceholderPage title="Issue Queue"      desc="Triage, assign, and update all incoming civic reports." />
-const Analytics  = () => <PlaceholderPage title="Analytics"        desc="Trend analysis, hotspot maps, and resolution times." />
-const Teams      = () => <PlaceholderPage title="Teams & Dispatch" desc="Manage field crews and dispatch work orders." />
-const Settings   = () => <PlaceholderPage title="Settings"         desc="Configure AI rules, notification channels, and SLAs." />
 
 export default function AdminPortal() {
   const navigate = useNavigate()
@@ -34,7 +27,7 @@ export default function AdminPortal() {
     { to: '/admin/rewards',   label: '🎖️ Rewards',            end: true },
     { to: '/admin/analytics', label: '📈 Analytics',          end: true },
     { to: '/admin/teams',     label: '👷 Teams & Dispatch',   end: true },
-    { to: '/admin/settings',  label: '⚙️ Settings',           end: true },
+    { to: '/admin/settings',  label: '⚙️ Settings',          end: true },
   ]
 
   return (
@@ -62,12 +55,12 @@ export default function AdminPortal() {
       <main className={styles.main}>
         <Suspense fallback={<Loading />}>
           <Routes>
-            <Route index            element={<Overview />} />
+            <Route index           element={<Overview />} />
             <Route path="queue"     element={<IssueQueue />} />
             <Route path="cctv"      element={<CCTVSurveillance />} />
             <Route path="rewards"   element={<RewardsManagement />} />
             <Route path="analytics" element={<Analytics />} />
-            <Route path="teams"     element={<Teams />} />
+            <Route path="teams"     element={<TeamsDispatch />} />
             <Route path="settings"  element={<Settings />} />
           </Routes>
         </Suspense>

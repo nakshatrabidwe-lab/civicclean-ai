@@ -1,41 +1,41 @@
-import 'dotenv/config'
-import express from 'express'
-import cors    from 'cors'
-import morgan  from 'morgan'
+import dns from 'dns';
+dns.setDefaultResultOrder('ipv4first');
+dns.setServers(['8.8.8.8', '1.1.1.1']);
+import marketplaceRouter from './routes/marketplace.js';
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
-import reportsRouter  from './routes/reports.js'
-import usersRouter    from './routes/users.js'
-import adminRouter    from './routes/admin.js'
+import reportsRouter from './routes/reports.js';
+import cctvRouter from './routes/cctv.js';
 
-const app  = express()
-const PORT = process.env.PORT ?? 3001
+dotenv.config();
 
-// ── Middleware ────────────────────────────────────────────────
-app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? 'http://localhost:5173' }))
-app.use(express.json())
-app.use(morgan('dev'))
+const app = express();
 
-// ── Routes ────────────────────────────────────────────────────
-app.use('/api/reports', reportsRouter)
-app.use('/api/users',   usersRouter)
-app.use('/api/admin',   adminRouter)
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
 
-// ── Health check ─────────────────────────────────────────────
-app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() })
-})
+// Configured with your username nakshatrabidwe_db_user
+const ATLAS_URI = 'mongodb+srv://nakshatrabidwe_db_user:gWKVckf6zpe8uhBd@cluster0.xmm7huo.mongodb.net/civicclean_db?retryWrites=true&w=majority';
 
-// ── 404 handler ───────────────────────────────────────────────
-app.use((_req, res) => {
-  res.status(404).json({ message: 'Route not found' })
-})
+const MONGO_URI = process.env.MONGO_URI && process.env.MONGO_URI.startsWith('mongodb') 
+  ? process.env.MONGO_URI 
+  : ATLAS_URI;
 
-// ── Global error handler ──────────────────────────────────────
-app.use((err, _req, res, _next) => {
-  console.error(err)
-  res.status(err.status ?? 500).json({ message: err.message ?? 'Internal server error' })
-})
+console.log('📡 Connecting to MongoDB Atlas...');
 
-app.listen(PORT, () => {
-  console.log(`\n🚀  CivicClean AI backend running on http://localhost:${PORT}\n`)
-})
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ Connected to MongoDB Database successfully'))
+  .catch((err) => console.error('❌ MongoDB Connection Error:', err));
+
+// Routes
+app.use('/api/reports', reportsRouter);
+app.use('/api/cctv', cctvRouter);
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 CivicClean Backend Server running on http://localhost:${PORT}`));
+app.use('/api/reports', reportsRouter);
+app.use('/api/cctv', cctvRouter);
+app.use('/api/marketplace', marketplaceRouter);

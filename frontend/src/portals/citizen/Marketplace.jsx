@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useEffect } from 'react'
 import { SEED_ITEMS, CATEGORIES, CONDITION } from '../../shared/data/marketplaceData'
 import styles from './Marketplace.module.css'
 
@@ -38,7 +38,7 @@ function ItemCard({ item, tabKey }) {
   return (
     <div className={styles.card}>
       {/* Image area */}
-      <div className={styles.cardImg} style={{ background: item.bg }}>
+      <div className={styles.cardImg} style={{ background: item.bg || '#f3f4f6' }}>
         <span className={styles.cardEmoji}>
           {CATEGORIES.find(c => c.id === item.category)?.emoji ?? '📦'}
         </span>
@@ -53,7 +53,7 @@ function ItemCard({ item, tabKey }) {
           className={styles.condBadge}
           style={{ background: conditionColor + '22', color: conditionColor, borderColor: conditionColor + '44' }}
         >
-          {item.condition}
+          {item.condition || 'Good'}
         </span>
         {tabKey === 'donate' && (
           <span className={styles.freeBadge}>FREE</span>
@@ -64,18 +64,18 @@ function ItemCard({ item, tabKey }) {
       <div className={styles.cardBody}>
         <div className={styles.cardMeta}>
           <span className={styles.categoryPill}>
-            {CATEGORIES.find(c => c.id === item.category)?.label}
+            {CATEGORIES.find(c => c.id === item.category)?.label || item.category}
           </span>
-          <span className={styles.posted}>{item.postedAt}</span>
+          <span className={styles.posted}>{item.postedAt || 'Just now'}</span>
         </div>
 
         <h3 className={styles.cardTitle}>{item.title}</h3>
-        <p className={styles.cardDesc}>{item.desc}</p>
+        <p className={styles.cardDesc}>{item.desc || item.description}</p>
 
         {/* Tags */}
         <div className={styles.tags}>
-          {item.tags.map(t => (
-            <span key={t} className={styles.tag}>{t}</span>
+          {(item.tags || [item.category, item.condition]).map((t, idx) => (
+            <span key={idx} className={styles.tag}>{t}</span>
           ))}
         </div>
 
@@ -85,26 +85,26 @@ function ItemCard({ item, tabKey }) {
             {tabKey === 'donate' ? (
               <span className={styles.priceFree}>Free Donation</span>
             ) : tabKey === 'sell' ? (
-              <><span className={styles.priceVal}>₹{item.price.toLocaleString()}</span>
-              <span className={styles.priceUnit}>/{item.unit}</span></>
+              <><span className={styles.priceVal}>₹{Number(item.price || 0).toLocaleString()}</span>
+              <span className={styles.priceUnit}>/{item.unit || 'unit'}</span></>
             ) : (
               <><span className={styles.priceOffer}>Offering</span>
-              <span className={styles.priceVal}>₹{item.price.toLocaleString()}</span>
-              <span className={styles.priceUnit}>/{item.unit}</span></>
+              <span className={styles.priceVal}>₹{Number(item.price || 0).toLocaleString()}</span>
+              <span className={styles.priceUnit}>/{item.unit || 'unit'}</span></>
             )}
           </div>
           <div className={styles.sellerRow}>
-            <div className={styles.sellerAvatar}>{item.seller[0]}</div>
+            <div className={styles.sellerAvatar}>{(item.seller || 'User')[0]}</div>
             <div>
-              <p className={styles.sellerName}>{item.seller}</p>
+              <p className={styles.sellerName}>{item.seller || 'Citizen'}</p>
               <p className={styles.sellerRating}>
-                <IconStar />&nbsp;{item.sellerRating}
+                <IconStar />&nbsp;{item.sellerRating || '5.0'}
               </p>
             </div>
           </div>
         </div>
 
-        <div className={styles.locRow}><IconPin />{item.location} · {item.qty}</div>
+        <div className={styles.locRow}><IconPin />{item.location || 'Yavatmal'} · {item.qty || item.quantity || '1 unit'}</div>
 
         <button className={`${styles.ctaBtn} ${styles['cta_' + tabKey]}`}>
           {tabKey === 'sell' ? 'Contact Seller' : tabKey === 'buy' ? 'Make an Offer' : 'Request Item'}
@@ -116,16 +116,70 @@ function ItemCard({ item, tabKey }) {
 }
 
 // ── Post form modal ───────────────────────────────────────────
-function PostModal({ tabKey, onClose }) {
+function PostModal({ tabKey, onClose, onAddListing }) {
   const tab = TABS.find(t => t.key === tabKey)
   const [form, setForm] = useState({ title:'', category:'', condition:'', qty:'', price:'', desc:'', location:'' })
   const [done, setDone] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+
   const change = e => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
   async function submit(e) {
     e.preventDefault()
-    await new Promise(r => setTimeout(r, 1000))
-    setDone(true)
+    setSubmitting(true)
+
+    const payload = {
+      title: form.title,
+      category: form.category,
+      condition: form.condition || 'Good',
+      quantity: form.qty || '1 unit',
+      price: Number(form.price) || 0,
+      description: form.desc,
+      location: form.location || 'Local Area',
+      mode: tabKey
+    }
+
+    try {
+      // POST to backend API
+      const res = await fetch('http://localhost:5000/api/marketplace', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      if (res.ok) {
+        const savedItem = await res.json()
+        onAddListing({
+          ...savedItem,
+          id: savedItem._id || Date.now(),
+          desc: savedItem.description,
+          qty: savedItem.quantity,
+          mode: tabKey,
+          seller: 'You',
+          sellerRating: '5.0',
+          postedAt: 'Just now',
+          tags: [savedItem.category, savedItem.condition]
+        })
+      } else {
+        throw new Error('Backend failed')
+      }
+    } catch (err) {
+      console.warn('Backend connection failed, displaying locally for presentation:', err)
+      // Fallback local insert
+      onAddListing({
+        id: Date.now(),
+        ...payload,
+        desc: form.desc,
+        qty: form.qty || '1 unit',
+        seller: 'You',
+        sellerRating: '5.0',
+        postedAt: 'Just now',
+        tags: [form.category, form.condition]
+      })
+    } finally {
+      setSubmitting(false)
+      setDone(true)
+    }
   }
 
   return (
@@ -191,9 +245,9 @@ function PostModal({ tabKey, onClose }) {
               <input name="location" className={styles.mInput} placeholder="City, State"
                 value={form.location} onChange={change} />
             </div>
-            <button type="submit" className={styles.mSubmit}
+            <button type="submit" className={styles.mSubmit} disabled={submitting}
               style={{ background: tab.color }}>
-              Post {tab.label} Listing
+              {submitting ? 'Posting...' : `Post ${tab.label} Listing`}
             </button>
           </form>
         )}
@@ -204,30 +258,68 @@ function PostModal({ tabKey, onClose }) {
 
 // ── Main Marketplace component ───────────────────────────────
 export default function Marketplace() {
-  const [activeTab,   setActiveTab]   = useState('sell')
+  const [activeTab,       setActiveTab]   = useState('sell')
   const [activeCategory, setActiveCat] = useState('all')
-  const [search,      setSearch]      = useState('')
-  const [sortBy,      setSortBy]      = useState('newest')
-  const [showModal,   setShowModal]   = useState(false)
+  const [search,          setSearch]      = useState('')
+  const [sortBy,          setSortBy]      = useState('newest')
+  const [showModal,       setShowModal]   = useState(false)
   const [showFilters, setShowFilters] = useState(false)
+
+  // Combined State: Start with static presentation seed items
+  const [items, setItems] = useState(SEED_ITEMS)
+
+  // Fetch live items from MongoDB on load and merge
+  useEffect(() => {
+    fetch('http://localhost:5000/api/marketplace')
+      .then(res => {
+        if (!res.ok) throw new Error('Fetch failed')
+        return res.json()
+      })
+      .then(dbData => {
+        if (Array.isArray(dbData) && dbData.length > 0) {
+          const formattedDbItems = dbData.map(dbItem => ({
+            id: dbItem._id,
+            title: dbItem.title,
+            category: dbItem.category,
+            condition: dbItem.condition || 'Good',
+            qty: dbItem.quantity || '1 unit',
+            price: dbItem.price || 0,
+            desc: dbItem.description,
+            location: dbItem.location || 'Local Area',
+            mode: dbItem.mode || 'sell',
+            seller: 'User',
+            sellerRating: '5.0',
+            postedAt: 'Recent',
+            tags: [dbItem.category, dbItem.condition || 'Good']
+          }))
+          // Dynamic items appear at top, followed by mock items
+          setItems([...formattedDbItems, ...SEED_ITEMS])
+        }
+      })
+      .catch(err => console.warn('Using static fallback listings:', err))
+  }, [])
+
+  const handleAddListing = (newItem) => {
+    setItems(prev => [newItem, ...prev])
+  }
 
   const activeTabMeta = TABS.find(t => t.key === activeTab)
 
   const filtered = useMemo(() => {
-    let items = SEED_ITEMS.filter(i => i.mode === activeTab)
+    let list = items.filter(i => (i.mode || 'sell') === activeTab)
     if (activeCategory !== 'all')
-      items = items.filter(i => i.category === activeCategory)
+      list = list.filter(i => i.category === activeCategory)
     if (search.trim())
-      items = items.filter(i =>
+      list = list.filter(i =>
         i.title.toLowerCase().includes(search.toLowerCase()) ||
-        i.desc.toLowerCase().includes(search.toLowerCase()) ||
-        i.tags.some(t => t.toLowerCase().includes(search.toLowerCase()))
+        (i.desc && i.desc.toLowerCase().includes(search.toLowerCase())) ||
+        (i.tags && i.tags.some(t => t.toLowerCase().includes(search.toLowerCase())))
       )
-    if (sortBy === 'price_asc')  items = [...items].sort((a,b) => a.price - b.price)
-    if (sortBy === 'price_desc') items = [...items].sort((a,b) => b.price - a.price)
-    if (sortBy === 'rating')     items = [...items].sort((a,b) => b.sellerRating - a.sellerRating)
-    return items
-  }, [activeTab, activeCategory, search, sortBy])
+    if (sortBy === 'price_asc')  list = [...list].sort((a,b) => (a.price || 0) - (b.price || 0))
+    if (sortBy === 'price_desc') list = [...list].sort((a,b) => (b.price || 0) - (a.price || 0))
+    if (sortBy === 'rating')     list = [...list].sort((a,b) => (b.sellerRating || 0) - (a.sellerRating || 0))
+    return list
+  }, [items, activeTab, activeCategory, search, sortBy])
 
   function clearFilters() {
     setSearch(''); setActiveCat('all'); setSortBy('newest')
@@ -268,7 +360,7 @@ export default function Marketplace() {
             <span className={styles.tabEmoji}>{tab.emoji}</span>
             <span className={styles.tabLabel}>{tab.label}</span>
             <span className={styles.tabCount}>
-              {SEED_ITEMS.filter(i => i.mode === tab.key).length}
+              {items.filter(i => (i.mode || 'sell') === tab.key).length}
             </span>
           </button>
         ))}
@@ -349,7 +441,7 @@ export default function Marketplace() {
 
       {/* ── Post modal ──────────────────────────────────── */}
       {showModal && (
-        <PostModal tabKey={activeTab} onClose={() => setShowModal(false)} />
+        <PostModal tabKey={activeTab} onClose={() => setShowModal(false)} onAddListing={handleAddListing} />
       )}
     </div>
   )

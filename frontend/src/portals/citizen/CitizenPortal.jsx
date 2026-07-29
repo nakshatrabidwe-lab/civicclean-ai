@@ -1,6 +1,8 @@
 import React, { Suspense, lazy } from 'react'
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
 import styles from './CitizenPortal.module.css'
+import TrackIssues from './TrackIssues';
+import Profile from './Profile';
 
 const Dashboard          = lazy(() => import('./Dashboard'))
 const RegisterPage       = lazy(() => import('./RegisterPage'))
@@ -23,9 +25,7 @@ function Loading() {
   return <div style={{ padding: '40px', color: 'var(--color-text-muted)', fontFamily: 'var(--font-body)' }}>Loading...</div>
 }
 
-const ReportIssue = () => <PlaceholderPage title="Report an Issue" desc="Describe a civic problem and let AI categorise & route it." />
-const TrackIssues = () => <PlaceholderPage title="Track Issues"    desc="Follow community-reported issues near you." />
-const Profile     = () => <PlaceholderPage title="Profile"         desc="Manage your account settings and preferences." />
+
 
 export default function CitizenPortal() {
   const navigate = useNavigate()
@@ -37,7 +37,7 @@ export default function CitizenPortal() {
     { to: '/citizen/trees',        label: '🌳 My Trees',      end: true  },
     { to: '/citizen/rewards',      label: '🎖️ My Rewards',    end: true  },
     { to: '/citizen/transparency', label: '📊 City Report',   end: true  },
-    { to: '/citizen/report',       label: '📍 Report Issue',  end: true  },
+    { to: '/citizen/act/grievance', label: '📍 Report Issue',  end: true  },
     { to: '/citizen/track',        label: '🔍 Track Issues',  end: true  },
     { to: '/citizen/profile',      label: '👤 Profile',       end: true  },
     { to: '/citizen/register',     label: '✅ Register',      end: true  },
@@ -74,7 +74,6 @@ export default function CitizenPortal() {
             <Route path="trees"        element={<TreeAdoption />} />
             <Route path="rewards"      element={<CitizenRewards />} />
             <Route path="transparency" element={<TransparencyReport />} />
-            <Route path="report"       element={<ReportIssue />} />
             <Route path="track"        element={<TrackIssues />} />
             <Route path="profile"      element={<Profile />} />
             <Route path="register"     element={<RegisterPage />} />

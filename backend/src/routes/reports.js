@@ -1,73 +1,34 @@
-import { Router } from 'express'
+import express from 'express';
+import Issue from '../models/Issue.js';
 
-const router = Router()
+const router = express.Router();
 
-// In-memory store – swap for a DB later
-let reports = []
-let nextId  = 1
-
-/** GET /api/reports  – list all reports (supports ?status= filter) */
-router.get('/', (req, res) => {
-  const { status } = req.query
-  const filtered = status
-    ? reports.filter(r => r.status === status)
-    : reports
-  res.json(filtered)
-})
-
-/** GET /api/reports/:id */
-router.get('/:id', (req, res) => {
-  const report = reports.find(r => r.id === Number(req.params.id))
-  if (!report) return res.status(404).json({ message: 'Report not found' })
-  res.json(report)
-})
-
-/** POST /api/reports  – citizen submits a new issue */
-router.post('/', (req, res) => {
-  const { title, description, category, location, citizenId } = req.body
-  if (!title || !description) {
-    return res.status(400).json({ message: '`title` and `description` are required' })
+// GET all reported issues
+router.get('/', async (req, res) => {
+  try {
+    const issues = await Issue.find().sort({ createdAt: -1 });
+    res.json(issues);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+});
 
-  const report = {
-    id: nextId++,
-    title,
-    description,
-    category:   category  ?? 'uncategorised',
-    location:   location  ?? null,
-    citizenId:  citizenId ?? null,
-    status:     'open',
-    priority:   'normal',
-    createdAt:  new Date().toISOString(),
-    updatedAt:  new Date().toISOString(),
+// POST a new grievance
+router.post('/', async (req, res) => {
+  try {
+    const newIssue = new Issue({
+      issueId: `ISS-${Math.floor(1000 + Math.random() * 9000)}`,
+      title: req.body.title,
+      location: req.body.location,
+      category: req.body.category,
+      description: req.body.description,
+      image: req.body.imagePreview || 'https://images.unsplash.com/photo-1530587191325-3db32d826c18?auto=format&fit=crop&w=600&q=80'
+    });
+    const saved = await newIssue.save();
+    res.status(201).json(saved);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
+});
 
-  reports.push(report)
-  res.status(201).json(report)
-})
-
-/** PATCH /api/reports/:id  – admin updates status/priority */
-router.patch('/:id', (req, res) => {
-  const idx = reports.findIndex(r => r.id === Number(req.params.id))
-  if (idx === -1) return res.status(404).json({ message: 'Report not found' })
-
-  reports[idx] = {
-    ...reports[idx],
-    ...req.body,
-    id:        reports[idx].id,           // immutable
-    updatedAt: new Date().toISOString(),
-  }
-  res.json(reports[idx])
-})
-
-/** DELETE /api/reports/:id */
-router.delete('/:id', (req, res) => {
-  const before = reports.length
-  reports = reports.filter(r => r.id !== Number(req.params.id))
-  if (reports.length === before) {
-    return res.status(404).json({ message: 'Report not found' })
-  }
-  res.status(204).send()
-})
-
-export default router
+export default router;
