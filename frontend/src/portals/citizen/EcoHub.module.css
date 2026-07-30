@@ -1,0 +1,40 @@
+.wrap { display: flex; flex-direction: column; gap: 24px; }
+
+.subNav { display: flex; gap: 10px; flex-wrap: wrap; }
+.tab {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 18px; flex: 1; min-width: 180px;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-lg); text-decoration: none;
+  transition: all .18s;
+}
+.tab:hover { border-color: var(--tc, var(--color-primary)); box-shadow: var(--shadow-sm); transform: translateY(-1px); }
+.tabActive {
+  border-color: var(--tc, var(--color-primary)) !important;
+  background: color-mix(in srgb, var(--tc, var(--color-primary)) 8%, white) !important;
+}
+.tabEmoji { font-size: 1.4rem; flex-shrink: 0; }
+.tabText  { display: flex; flex-direction: column; gap: 1px; }
+.tabLabel { font-family: var(--font-display); font-size: .9rem; font-weight: 700; color: var(--color-text); }
+.tabActive .tabLabel { color: var(--tc, var(--color-primary)); }
+.tabDesc  { font-size: .75rem; color: var(--color-text-muted); }
+
+.landing { display: flex; flex-direction: column; gap: 24px; }
+.hero { text-align: center; padding: 8px 0; }
+.hero h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -.03em; color: var(--color-text); margin-bottom: 10px; }
+.hero p  { font-size: 1rem; color: var(--color-text-muted); max-width: 460px; margin: 0 auto; line-height: 1.6; }
+
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.card {
+  display: flex; flex-direction: column; align-items: flex-start; gap: 10px;
+  padding: 28px 24px; background: var(--color-surface);
+  border: 1.5px solid var(--color-border); border-radius: var(--radius-xl);
+  cursor: pointer; text-align: left; box-shadow: var(--shadow-sm);
+  transition: all .2s;
+}
+.card:hover { border-color: var(--tc); transform: translateY(-3px); box-shadow: var(--shadow-md); }
+.cardEmoji { font-size: 2.2rem; }
+.card h2 { font-size: 1.2rem; font-weight: 800; color: var(--color-text); margin: 0; }
+.card p  { font-size: .88rem; color: var(--color-text-muted); line-height: 1.5; margin: 0; }
+.cta     { margin-top: 8px; font-size: .85rem; font-weight: 700; color: var(--tc); }

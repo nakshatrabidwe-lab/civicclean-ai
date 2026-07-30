@@ -1,0 +1,178 @@
+/* ═══════════════════════════════════════════════════
+   Admin Overview Dashboard
+═══════════════════════════════════════════════════ */
+@keyframes fadeUp  { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+@keyframes pulse   { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+
+.page { animation: fadeUp .35s ease; display: flex; flex-direction: column; gap: 24px; }
+
+/* ── Header ──────────────────────────────────────── */
+.header {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; flex-wrap: wrap; gap: 12px;
+}
+
+.title {
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800; letter-spacing: -0.03em; color: var(--color-text);
+}
+.subtitle { font-size: .85rem; color: var(--color-text-muted); margin-top: 2px; }
+
+.headerRight { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.liveChip {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25);
+  color: #ef4444; border-radius: var(--radius-full);
+  padding: 5px 12px; font-size: .72rem; font-weight: 800; letter-spacing: .08em;
+}
+.liveDot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #ef4444; animation: pulse 1.4s ease infinite;
+}
+
+.dateChip {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-full);
+  padding: 5px 14px; font-size: .8rem; color: var(--color-text-muted); font-weight: 500;
+}
+
+/* ── KPI Grid ────────────────────────────────────── */
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.kpiCard {
+  border-radius: var(--radius-xl); padding: 20px 22px;
+  display: flex; flex-direction: column; gap: 14px;
+  border: 1px solid rgba(255,255,255,.06);
+  box-shadow: 0 8px 24px rgba(0,0,0,.18);
+  transition: transform .2s, box-shadow .2s;
+}
+.kpiCard:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,.28); }
+
+.kpiTop { display: flex; align-items: flex-start; justify-content: space-between; }
+.kpiMeta { display: flex; flex-direction: column; gap: 4px; }
+.kpiIcon { font-size: 1.3rem; }
+.kpiLabel { font-size: .75rem; font-weight: 600; color: rgba(255,255,255,.55); letter-spacing: .03em; text-transform: uppercase; }
+
+.kpiDelta {
+  font-size: .72rem; font-weight: 700; padding: 3px 8px;
+  border-radius: var(--radius-full); letter-spacing: .03em;
+}
+.deltaUp   { background: rgba(34,197,94,.18); color: #4ade80; }
+.deltaDown { background: rgba(239,68,68,.18); color: #f87171; }
+
+.kpiBottom { display: flex; align-items: flex-end; justify-content: space-between; }
+.kpiValue  {
+  font-family: var(--font-display); font-size: 2rem; font-weight: 800;
+  color: #fff; letter-spacing: -0.03em; line-height: 1;
+}
+
+/* ── Generic card ────────────────────────────────── */
+.card {
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-xl); padding: 22px 24px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: var(--shadow-sm);
+}
+
+.cardTitle {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700;
+  color: var(--color-text);
+}
+.cardTitleRow { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+/* ── Middle row ──────────────────────────────────── */
+.midRow {
+  display: grid; grid-template-columns: 1fr; gap: 14px;
+}
+@media (min-width: 860px) { .midRow { grid-template-columns: 1fr 1fr; } }
+
+/* Gauge */
+.gaugeWrap { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; }
+.gaugeRing { position: relative; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.gaugeCenter {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  pointer-events: none;
+}
+.gaugePct { font-family: var(--font-display); font-size: 1.3rem; font-weight: 800; color: var(--color-text); }
+.gaugeLabel { font-size: .68rem; font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: .05em; }
+
+.gaugeLegend { display: flex; flex-direction: column; gap: 10px; }
+.legendRow   { display: flex; align-items: center; gap: 8px; }
+.legendDot   { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.legendLabel { font-size: .82rem; color: var(--color-text-muted); flex: 1; }
+.legendVal   { font-size: .88rem; font-weight: 700; color: var(--color-text); }
+
+/* Category breakdown */
+.catBreakdown { display: flex; flex-direction: column; gap: 10px; border-top: 1.5px solid var(--color-border); padding-top: 16px; }
+.catRow   { display: flex; align-items: center; gap: 10px; }
+.catLabel { font-size: .78rem; color: var(--color-text-muted); width: 110px; flex-shrink: 0; }
+.catPct   { font-size: .78rem; font-weight: 700; color: var(--color-text); width: 34px; text-align: right; flex-shrink: 0; }
+
+/* Progress bar */
+.barTrack {
+  flex: 1; height: 6px; background: var(--color-surface-alt);
+  border-radius: var(--radius-full); overflow: hidden;
+}
+.barFill  { height: 100%; border-radius: var(--radius-full); }
+
+/* Plantation */
+.plantTotal { font-size: .82rem; font-weight: 700; color: var(--color-primary); white-space: nowrap; }
+.plantMeter { display: flex; flex-direction: column; gap: 6px; }
+.plantPct   { font-size: .75rem; color: var(--color-text-muted); }
+
+.zoneList { display: flex; flex-direction: column; gap: 12px; }
+.zoneRow  { display: flex; align-items: flex-start; gap: 12px; }
+.zoneInfo { flex: 0 0 160px; }
+.zoneName    { display: block; font-size: .82rem; font-weight: 600; color: var(--color-text); }
+.zoneSpecies { font-size: .72rem; color: var(--color-text-subtle); }
+.zoneRight   { flex: 1; display: flex; align-items: center; gap: 8px; }
+.zoneMini    { flex: 1; }
+.zonePct     { font-size: .75rem; font-weight: 700; color: var(--color-text); width: 30px; text-align: right; flex-shrink: 0; }
+.zoneHealth  {
+  font-size: .68rem; font-weight: 700; padding: 2px 7px;
+  border-radius: var(--radius-full); border: 1px solid; white-space: nowrap;
+}
+
+/* ── Bottom row ──────────────────────────────────── */
+.bottomRow {
+  display: grid; grid-template-columns: 1fr; gap: 14px;
+}
+@media (min-width: 860px) { .bottomRow { grid-template-columns: 1fr 1fr; } }
+
+/* Ward list */
+.wardList { display: flex; flex-direction: column; gap: 14px; }
+.wardRow  { display: flex; flex-direction: column; gap: 6px; }
+.wardHeader { display: flex; justify-content: space-between; align-items: center; }
+.wardName   { font-size: .82rem; font-weight: 600; color: var(--color-text); }
+.wardFraction { font-size: .75rem; color: var(--color-text-muted); }
+.wardBarWrap { display: flex; align-items: center; gap: 8px; }
+.wardBarWrap .barTrack { flex: 1; }
+.wardPct { font-size: .75rem; font-weight: 700; width: 32px; text-align: right; flex-shrink: 0; }
+
+/* Activity feed */
+.viewAll { font-size: .78rem; font-weight: 600; color: var(--color-admin); cursor: pointer; white-space: nowrap; }
+.viewAll:hover { text-decoration: underline; }
+
+.feed { display: flex; flex-direction: column; }
+.feedRow {
+  display: flex; gap: 12px; padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+.feedRow:last-child { border-bottom: none; }
+
+.feedDot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 6px; }
+.feedBody { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+.feedTop  { display: flex; align-items: center; justify-content: space-between; }
+.feedId   { font-size: .75rem; font-weight: 700; color: var(--color-text-muted); font-family: monospace; }
+.feedBadge { font-size: .68rem; font-weight: 700; padding: 2px 8px; border-radius: var(--radius-full); }
+.feedType  { font-size: .88rem; font-weight: 600; color: var(--color-text); }
+.feedMeta  { display: flex; align-items: center; justify-content: space-between; }
+.feedWard  { font-size: .75rem; color: var(--color-text-muted); }
+.feedTime  { font-size: .72rem; color: var(--color-text-subtle); }

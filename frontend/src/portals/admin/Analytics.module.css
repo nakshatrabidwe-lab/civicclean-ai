@@ -1,0 +1,200 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header Banner matching Rewards Management header */
+.headerCard {
+  background: #ffffff;
+  padding: 28px 36px;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.headerIcon {
+  font-size: 32px;
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 900;
+  margin: 0 0 6px 0;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Top Stat Cards with Accent Top Borders */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.statCard {
+  background: #ffffff;
+  padding: 20px 24px;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+}
+
+.statCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+}
+
+.statCardBlue::before { background: #3b82f6; }
+.statCardGreen::before { background: #10b981; }
+.statCardPurple::before { background: #8b5cf6; }
+
+.statLabel {
+  font-size: 12px;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.statValue {
+  font-size: 30px;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 6px 0 2px 0;
+}
+
+.statValueHighlight {
+  font-size: 30px;
+  font-weight: 900;
+  color: #059669;
+  margin: 6px 0 2px 0;
+}
+
+.statSub {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.statSubGreen {
+  font-size: 12px;
+  color: #059669;
+  font-weight: 700;
+}
+
+/* Main Content Grid */
+.contentGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 900px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 28px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.cardTitle {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 13px;
+}
+
+.table th {
+  padding: 12px 14px;
+  border-bottom: 2px solid #f1f5f9;
+  color: #64748b;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.table td {
+  padding: 16px 14px;
+  border-bottom: 1px solid #f8fafc;
+  color: #334155;
+  font-weight: 500;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.badgeHigh { background: #ffe4e6; color: #e11d48; }
+.badgeMedium { background: #fef3c7; color: #d97706; }
+.badgeLow { background: #f1f5f9; color: #475569; }
+
+.insightBox {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.insightItem {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid #f1f5f9;
+}
+
+.insightItem strong {
+  font-size: 13px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.insightItem p {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: #64748b;
+}
